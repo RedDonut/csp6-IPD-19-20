@@ -7,20 +7,22 @@
 ####
 
 team_name = 'E0'
-strategy_name = 'Collude'
-strategy_description = 'Always collude.'
-    
+strategy_name = 'Random'
+strategy_description = 'A random generator that decides whether to betray or collude.'
+import random
 def move(my_history, their_history, my_score, their_score):
-    '''Make my move based on the history with this player.
-    
-    history: a string with one letter (c or b) per round that has been played with this opponent.
-    their_history: a string of the same length as history, possibly empty. 
-    The first round between these two players is my_history[0] and their_history[0]
-    The most recent round is my_history[-1] and their_history[-1]
-    
-    Returns 'c' or 'b' for collude or betray.
-    '''
-    
-    # This player always colludes.
+  '''
+  Make my move based on the history with this player.
+  history: a string with one letter (c or b) per round that has been played with this opponent.
+  their_history: a string of the same length as history, possibly empty. 
+  The first round between these two players is my_history[0] and their_history[0]
+  The most recent round is my_history[-1] and their_history[-1]
+  Returns 'c' or 'b' for collude or betray.
+  '''
+  import random
+  random_number = random.choice([1,2,3,4,5,6,7,8,9,10])
+  selected_numbers = [3,8,4]
+  if random_number in selected_numbers: # 1% chance to collude, or else betray
+    return 'b'
+  else:
     return 'c'
-    

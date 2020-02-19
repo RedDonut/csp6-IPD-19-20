@@ -1,0 +1,303 @@
+--------------------------------------------------------------------------------
+Section 0 - Line up
+--------------------------------------------------------------------------------
+Player 0 (P0): E0, Random
+        A random generator that decides whether to betray or collude.
+Player 1 (P1): E1, Alterate forever if betrayed
+        Alternate forever if betrayed once, otherwise collude.  If round number 
+        is more than 150, betray.
+Player 2 (P2): E2, Check history
+        Collude, then alternate.
+Player 3 (P3): E3, Collude but retaliate
+        Collude first round. Collude, except in a round after getting 
+        a severe punishment.
+--------------------------------------------------------------------------------
+Section 1 - Player vs. Player
+--------------------------------------------------------------------------------
+Each column shows pts//round earned against each other player:
+             P0     P1     P2     P3
+vs. P0 :      0    -64   -110   -137
+vs. P1 :   -199      0    -13      0
+vs. P2 :   -107     -6      0      0
+vs. P3 :    -82      0      0      0
+TOTAL  :   -388    -70   -123   -137
+--------------------------------------------------------------------------------
+Section 2 - Leaderboard
+--------------------------------------------------------------------------------
+Average points per round:
+Team name (P#):  Score      with strategy name
+E1        (P1):        -18 points with Alterate forever if betrayed            
+E2        (P2):        -31 points with Check history                           
+E3        (P3):        -35 points with Collude but retaliate                   
+E0        (P0):        -97 points with Random                                  
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+example0--------------------------------------------------------------------------------
+####
+# Each team's file must define four tokens:
+#     team_name: a string
+#     strategy_name: a string
+#     strategy_description: a string
+#     move: A function that returns 'c' or 'b'
+####
+
+team_name = 'E0'
+strategy_name = 'Random'
+strategy_description = 'A random generator that decides whether to betray or collude.'
+import random
+def move(my_history, their_history, my_score, their_score):
+  '''
+  Make my move based on the history with this player.
+  history: a string with one letter (c or b) per round that has been played with this opponent.
+  their_history: a string of the same length as history, possibly empty. 
+  The first round between these two players is my_history[0] and their_history[0]
+  The most recent round is my_history[-1] and their_history[-1]
+  Returns 'c' or 'b' for collude or betray.
+  '''
+  import random
+  random_number = random.choice([1,2,3,4,5,6,7,8,9,10])
+  selected_numbers = [3,8,4]
+  if random_number in selected_numbers: # 1% chance to collude, or else betray
+    return 'b'
+  else:
+    return 'c'--------------------------------------------------------------------------------
+example1--------------------------------------------------------------------------------
+####
+# Each team's file must define four tokens:
+#     team_name: a string
+#     strategy_name: a string
+#     strategy_description: a string
+#     move: A function that returns 'c' or 'b'
+####
+
+team_name = 'E1'
+strategy_name = 'Alterate forever if betrayed'
+strategy_description = 'Alternate forever if betrayed once, otherwise collude.  If round number is more than 150, betray.'
+      
+def move(my_history, their_history, my_score, their_score):
+  '''Make my move based on the history with this player.
+    history: a string with one letter (c or b) per round that has been played with this opponent     their_history: a string of the same length as history, possibly empty      The first round between these two players is my_history[0] and their_history  
+    The most recent round is my_history[-1] and their_history  
+    Returns 'c' or 'b' for collude or be  .
+  '''
+  #In this the program colludes until betrayed then betrays forever
+  if 'b' in their_history:
+    if len(their_history) % 2 == 0: # Alternates if betrayed
+      return 'c'
+    else:
+      return 'b'
+  else:
+    if len(their_history) > 160:
+      return 'b'
+    else:
+      return 'c'
+--------------------------------------------------------------------------------
+example2--------------------------------------------------------------------------------
+####
+# Each team's file must define four tokens:
+#     team_name: a string
+#     strategy_name: a string
+#     strategy_description: a string
+#     move: A function that returns 'c' or 'b'
+####
+
+team_name = 'E2'
+strategy_name = 'Check history'
+strategy_description = 'Collude, then alternate.'
+    
+def move(my_history, their_history, my_score, their_score):
+  '''Make my move based on the history with this player.
+  history: a string with one letter (c or b) per round that has been played with this opponent.
+  their_history: a string of the same length as history, possibly empty. 
+  The first round between these two players is my_history[0] and their_history[0]
+  The most recent round is my_history[-1] and their_history[-1]
+  Returns 'c' or 'b' for collude or betray.
+  '''
+  # This player colludes on even numbered rounds (first round is round #0).
+  if len(my_history)==0: # It's the first round: collude
+    return 'c'
+  else:
+    # If there was a previous round just like the last one,
+    # do whatever they did in the round that followed it
+    
+    # Reference last round
+    recent_round_them = their_history[-1]
+    recent_round_me = my_history[-1]
+                
+    # Look at rounds before that one
+    for round in range(len(my_history)-1):
+        prior_round_them = their_history[round]
+        prior_round_me = my_history[round]
+        # If one matches
+        if (prior_round_me == recent_round_me) and (prior_round_them == recent_round_them):
+            return their_history[round]
+    # No match found
+    if my_history[-1]=='c' and their_history[-1]=='b':
+        return 'b' # Betray if they were severely punished last time
+    elif my_history[-1] == 'b' and their_history [-1] == 'b':
+      return 'c' # Betray if both of us betrayed last round.
+    else:
+        return 'c' # Otherwise collude.
+--------------------------------------------------------------------------------
+example3--------------------------------------------------------------------------------
+####
+# Each team's file must define four tokens:
+#     team_name: a string
+#     strategy_name: a string
+#     strategy_description: a string
+#     move: A function that returns 'c' or 'b'
+####
+
+team_name = 'E3'
+strategy_name = 'Collude but retaliate'
+strategy_description = '''\
+Collude first round. Collude, except in a round after getting 
+a severe punishment.'''
+    
+def move(my_history, their_history, my_score, their_score):
+    '''Make my move based on the history with this player.
+    
+    history: a string with one letter (c or b) per round that has been played with this opponent.
+    their_history: a string of the same length as history, possibly empty. 
+    The first round between these two players is my_history[0] and their_history[0]
+    The most recent round is my_history[-1] and their_history[-1]
+    
+    Returns 'c' or 'b' for collude or betray.
+    '''
+    if len(my_history)==0: # It's the first round; collude.
+        return 'c'
+    elif my_history[-1]=='c' and their_history[-1]=='b':
+        return 'b' # Betray if they were severely punished last time,
+    else:
+        return 'c' # otherwise collude.--------------------------------------------------------------------------------
+Section 3 - Game Data for Team E0
+--------------------------------------------------------------------------------
+-199 pt//round: E0(P0) "Random"
+-64 pt//ound: E1(P1) "Alterate forever if betrayed"
+CCCCBcCcBcBbCcCcCbCbBcCcCbCbCbCbCcBcBbCbCcCbCbBcCcBcCcCcBcCcCcCcBcCbCcCbCcCcBcCb
+CCCCcBCBcBcbCBCBCbCbcBCBCbCbCbCbCBcBcbCbCBCbCbcBCBcBCBCBcBCBCBCBcBCbCBCbCBCBcBCb
+
+BcCcCcBcCbCcBcCbCbCcCcBcCcCcCcBcCcBcCcCbCbCcBcCcCcCcCcCcCcCcCcBcCcBbBcCcCcCc
+cBCBCBcBCbCBcBCbCbCBCBcBCBCBCBcBCBcBCBCbCbCBcBCBCBCBCBCBCBCBCBcBCBcbcBCBCBCB
+
+--------------------------------------------------------------------------------
+-107 pt//round: E0(P0) "Random"
+-110 pt//ound: E2(P2) "Check history"
+CBcCCCBcCBcCCCBcBcBbCBcCBbbbcBcCCCCBbcCCCCCBcBcCBbbcCBcCCCCCCCCCBcCCCCCBcCCBbcBc
+CcBCCCcBCcBCCCcBcBcbCcBCcbbbBcBCCCCcbBCCCCCcBcBCcbbBCcBCCCCCCCCCcBCCCCCcBCCcbBcB
+
+CCCBcCBbcCCCCCCCBcCBcBcCBcCCCCCCCCCCCCCBbcBcCCBcBcCCCBcCCBcBbcCCCCCCCCCBcCBcBcBc
+CCCcBCcbBCCCCCCCcBCcBcBCcBCCCCCCCCCCCCCcbBcBCCcBcBCCCcBCCcBcbBCCCCCCCCCcBCcBcBcB
+
+CBcBcCBbcCCBcCCCCCBcBcBcCCCBcCCBbbbbcCC
+CcBcBCcbBCCcBCCCCCcBcBcBCCCcBCCcbbbbBCC
+
+--------------------------------------------------------------------------------
+-82 pt//round: E0(P0) "Random"
+-137 pt//ound: E3(P3) "Collude but retaliate"
+CCCBbCBcBcCBcBcBcCCCCCBcBbCBcCCCCCBcCBcCCCCCBbBcCCCBbBcBcBbCCCCBcCBcCCCCBcCCCBbB
+CCCcbCcBcBCcBcBcBCCCCCcBcbCcBCCCCCcBCcBCCCCCcbcBCCCcbcBcBcbCCCCcBCcBCCCCcBCCCcbc
+
+cCCCBbCBcCCCCBbCCBbBcCBcBbCCCCC
+BCCCcbCcBCCCCcbCCcbcBCcBcbCCCCC
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Section 3 - Game Data for Team E1
+--------------------------------------------------------------------------------
+-64 pt//round: E1(P1) "Alterate forever if betrayed"
+-199 pt//ound: E0(P0) "Random"
+CCCCcBCBcBcbCBCBCbCbcBCBCbCbCbCbCBcBcbCbCBCbCbcBCBcBCBCBcBCBCBCBcBCbCBCbCBCBcBCb
+CCCCBcCcBcBbCcCcCbCbBcCcCbCbCbCbCcBcBbCbCcCbCbBcCcBcCcCcBcCcCcCcBcCbCcCbCcCcBcCb
+
+cBCBCBcBCbCBcBCbCbCBCBcBCBCBCBcBCBcBCBCbCbCBcBCBCBCBCBCBCBCBCBcBCBcbcBCBCBCB
+BcCcCcBcCbCcBcCbCbCcCcBcCcCcCcBcCcBcCcCbCbCcBcCcCcCcCcCcCcCcCcBcCcBbBcCcCcCc
+
+--------------------------------------------------------------------------------
+-6 pt//round: E1(P1) "Alterate forever if betrayed"
+-13 pt//ound: E2(P2) "Check history"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CBbBcBcB
+CcbcBcBc
+
+--------------------------------------------------------------------------------
+0 pt//round: E1(P1) "Alterate forever if betrayed"
+0 pt//ound: E3(P3) "Collude but retaliate"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Section 3 - Game Data for Team E2
+--------------------------------------------------------------------------------
+-110 pt//round: E2(P2) "Check history"
+-107 pt//ound: E0(P0) "Random"
+CcBCCCcBCcBCCCcBcBcbCcBCcbbbBcBCCCCcbBCCCCCcBcBCcbbBCcBCCCCCCCCCcBCCCCCcBCCcbBcB
+CBcCCCBcCBcCCCBcBcBbCBcCBbbbcBcCCCCBbcCCCCCBcBcCBbbcCBcCCCCCCCCCBcCCCCCBcCCBbcBc
+
+CCCcBCcbBCCCCCCCcBCcBcBCcBCCCCCCCCCCCCCcbBcBCCcBcBCCCcBCCcBcbBCCCCCCCCCcBCcBcBcB
+CCCBcCBbcCCCCCCCBcCBcBcCBcCCCCCCCCCCCCCBbcBcCCBcBcCCCBcCCBcBbcCCCCCCCCCBcCBcBcBc
+
+CcBcBCcbBCCcBCCCCCcBcBcBCCCcBCCcbbbbBCC
+CBcBcCBbcCCBcCCCCCBcBcBcCCCBcCCBbbbbcCC
+
+--------------------------------------------------------------------------------
+-13 pt//round: E2(P2) "Check history"
+-6 pt//ound: E1(P1) "Alterate forever if betrayed"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CcbcBcBc
+CBbBcBcB
+
+--------------------------------------------------------------------------------
+0 pt//round: E2(P2) "Check history"
+0 pt//ound: E3(P3) "Collude but retaliate"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Section 3 - Game Data for Team E3
+--------------------------------------------------------------------------------
+-137 pt//round: E3(P3) "Collude but retaliate"
+-82 pt//ound: E0(P0) "Random"
+CCCcbCcBcBCcBcBcBCCCCCcBcbCcBCCCCCcBCcBCCCCCcbcBCCCcbcBcBcbCCCCcBCcBCCCCcBCCCcbc
+CCCBbCBcBcCBcBcBcCCCCCBcBbCBcCCCCCBcCBcCCCCCBbBcCCCBbBcBcBbCCCCBcCBcCCCCBcCCCBbB
+
+BCCCcbCcBCCCCcbCCcbcBCcBcbCCCCC
+cCCCBbCBcCCCCBbCCBbBcCBcBbCCCCC
+
+--------------------------------------------------------------------------------
+0 pt//round: E3(P3) "Collude but retaliate"
+0 pt//ound: E1(P1) "Alterate forever if betrayed"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+--------------------------------------------------------------------------------
+0 pt//round: E3(P3) "Collude but retaliate"
+0 pt//ound: E2(P2) "Check history"
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+--------------------------------------------------------------------------------

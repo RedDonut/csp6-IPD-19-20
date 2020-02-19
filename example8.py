@@ -6,7 +6,7 @@
 #     move: A function that returns 'c' or 'b'
 ####
 
-team_name = 'The Hyenas'
+team_name = 'E8'
 strategy_name = 'Collude 90% unless betrayed within last 10 rounds.'
 strategy_description = '''\
 Betray if ever betrayed.
@@ -23,7 +23,7 @@ def move(my_history, their_history, my_score, their_score):
     The first round between these two players is my_history[0] and their_history[0]
     The most recent round is my_history[-1] and their_history[-1]
     
-    Returns 'c' or 'b' for collude or betray.
+    Returns 'c' or 'b' for collude or betray.    
     '''
 
     if 'b' in their_history[-10:]: # If the other player has betrayed within last 10 rounds, 

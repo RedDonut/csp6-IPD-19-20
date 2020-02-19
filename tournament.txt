@@ -5,7 +5,7 @@ Player 0 (P0): E0, Random
         A random generator that decides whether to betray or collude.
 Player 1 (P1): E1, Alterate forever if betrayed
         Alternate forever if betrayed once, otherwise collude.  If round number 
-        is more than 150, betray.
+        is more than 160, betray.
 Player 2 (P2): E2, Check history
         Collude, then alternate.
 Player 3 (P3): E3, Collude but retaliate
@@ -16,20 +16,20 @@ Section 1 - Player vs. Player
 --------------------------------------------------------------------------------
 Each column shows pts//round earned against each other player:
              P0     P1     P2     P3
-vs. P0 :      0    -64   -110   -137
-vs. P1 :   -199      0    -13      0
-vs. P2 :   -107     -6      0      0
-vs. P3 :    -82      0      0      0
-TOTAL  :   -388    -70   -123   -137
+vs. P0 :      0    -82    -89   -118
+vs. P1 :   -194      0      0      0
+vs. P2 :    -85      0      0      0
+vs. P3 :    -88      0      0      0
+TOTAL  :   -367    -82    -89   -118
 --------------------------------------------------------------------------------
 Section 2 - Leaderboard
 --------------------------------------------------------------------------------
 Average points per round:
 Team name (P#):  Score      with strategy name
-E1        (P1):        -18 points with Alterate forever if betrayed            
-E2        (P2):        -31 points with Check history                           
-E3        (P3):        -35 points with Collude but retaliate                   
-E0        (P0):        -97 points with Random                                  
+E1        (P1):        -21 points with Alterate forever if betrayed            
+E2        (P2):        -23 points with Check history                           
+E3        (P3):        -30 points with Collude but retaliate                   
+E0        (P0):        -92 points with Random                                  
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 example0--------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ example1------------------------------------------------------------------------
 
 team_name = 'E1'
 strategy_name = 'Alterate forever if betrayed'
-strategy_description = 'Alternate forever if betrayed once, otherwise collude.  If round number is more than 150, betray.'
+strategy_description = 'Alternate forever if betrayed once, otherwise collude.  If round number is more than 160, betray.'
       
 def move(my_history, their_history, my_score, their_score):
   '''Make my move based on the history with this player.
@@ -81,17 +81,16 @@ def move(my_history, their_history, my_score, their_score):
     Returns 'c' or 'b' for collude or be  .
   '''
   #In this the program colludes until betrayed then betrays forever
-  if 'b' in their_history:
-    if len(their_history) % 2 == 0: # Alternates if betrayed
+  if 'b' in their_history: # If betrayed before
+    if len(their_history) % 2 == 0: # Alternates 
       return 'c'
     else:
       return 'b'
   else:
-    if len(their_history) > 160:
+    if len(their_history) > 160: # if they havent betrayed and round past 160, betray
       return 'b'
     else:
-      return 'c'
---------------------------------------------------------------------------------
+      return 'c'--------------------------------------------------------------------------------
 example2--------------------------------------------------------------------------------
 ####
 # Each team's file must define four tokens:
@@ -172,58 +171,61 @@ def move(my_history, their_history, my_score, their_score):
         return 'c' # otherwise collude.--------------------------------------------------------------------------------
 Section 3 - Game Data for Team E0
 --------------------------------------------------------------------------------
--199 pt//round: E0(P0) "Random"
--64 pt//ound: E1(P1) "Alterate forever if betrayed"
-CCCCBcCcBcBbCcCcCbCbBcCcCbCbCbCbCcBcBbCbCcCbCbBcCcBcCcCcBcCcCcCcBcCbCcCbCcCcBcCb
-CCCCcBCBcBcbCBCBCbCbcBCBCbCbCbCbCBcBcbCbCBCbCbcBCBcBCBCBcBCBCBCBcBCbCBCbCBCBcBCb
+-194 pt//round: E0(P0) "Random"
+-82 pt//ound: E1(P1) "Alterate forever if betrayed"
+CCCCBcCcBcCcCcBcBbCcCcCcCbCcCbCcBcCcCcBcBcBcBcCcCcCcCcBcCbCcCcCbBcBcBcCcCcCcCcCc
+CCCCcBCBcBCBCBcBcbCBCBCBCbCBCbCBcBCBCBcBcBcBcBCBCBCBCBcBCbCBCBCbcBcBcBCBCBCBCBCB
 
-BcCcCcBcCbCcBcCbCbCcCcBcCcCcCcBcCcBcCcCbCbCcBcCcCcCcCcCcCcCcCcBcCcBbBcCcCcCc
-cBCBCBcBCbCBcBCbCbCBCBcBCBCBCBcBCBcBCBCbCbCBcBCBCBCBCBCBCBCBCBcBCBcbcBCBCBCB
+BbCbCcCcCcCbCcBcCcBbCcBcCcCbBcCcCcCcCbCbBcCbCbBcCcCcCcBcCbCcBcBbCcCbCbBcBbBcCbCb
+cbCbCBCBCBCbCBcBCBcbCBcBCBCbcBCBCBCBCbCbcBCbCbcBCBCBCBcBCbCBcBcbCBCbCbcBcbcBCbCb
 
---------------------------------------------------------------------------------
--107 pt//round: E0(P0) "Random"
--110 pt//ound: E2(P2) "Check history"
-CBcCCCBcCBcCCCBcBcBbCBcCBbbbcBcCCCCBbcCCCCCBcBcCBbbcCBcCCCCCCCCCBcCCCCCBcCCBbcBc
-CcBCCCcBCcBCCCcBcBcbCcBCcbbbBcBCCCCcbBCCCCCcBcBCcbbBCcBCCCCCCCCCcBCCCCCcBCCcbBcB
-
-CCCBcCBbcCCCCCCCBcCBcBcCBcCCCCCCCCCCCCCBbcBcCCBcBcCCCBcCCBcBbcCCCCCCCCCBcCBcBcBc
-CCCcBCcbBCCCCCCCcBCcBcBCcBCCCCCCCCCCCCCcbBcBCCcBcBCCCcBCCcBcbBCCCCCCCCCcBCcBcBcB
-
-CBcBcCBbcCCBcCCCCCBcBcBcCCCBcCCBbbbbcCC
-CcBcBCcbBCCcBCCCCCcBcBcBCCCcBCCcbbbbBCC
+CcBbCcCcBbBbCcCc
+CBcbCBCBcbcbCBCB
 
 --------------------------------------------------------------------------------
--82 pt//round: E0(P0) "Random"
--137 pt//ound: E3(P3) "Collude but retaliate"
-CCCBbCBcBcCBcBcBcCCCCCBcBbCBcCCCCCBcCBcCCCCCBbBcCCCBbBcBcBbCCCCBcCBcCCCCBcCCCBbB
-CCCcbCcBcBCcBcBcBCCCCCcBcbCcBCCCCCcBCcBCCCCCcbcBCCCcbcBcBcbCCCCcBCcBCCCCcBCCCcbc
+-85 pt//round: E0(P0) "Random"
+-89 pt//ound: E2(P2) "Check history"
+CBcCCCCCCBcCCCBcBcCBcCCCCBcCBcCCCCCCBbCCCCCBbcCCCCBcCCCBbbcCCCCCCCCCCBcCCCCCCBcC
+CcBCCCCCCcBCCCcBcBCcBCCCCcBCcBCCCCCCcbCCCCCcbBCCCCcBCCCcbbBCCCCCCCCCCcBCCCCCCcBC
 
-cCCCBbCBcCCCCBbCCBbBcCBcBbCCCCC
-BCCCcbCcBCCCCcbCCcbcBCcBcbCCCCC
+CCCBcCCBcBcCBcCCCCCBbcBcCBcBcCBcCCCCBcCBcCBcCCCCBcCCBcBcCCCCCCCCBcCCCCBbbcCC
+CCCcBCCcBcBCcBCCCCCcbBcBCcBcBCcBCCCCcBCcBCcBCCCCcBCCcBcBCCCCCCCCcBCCCCcbbBCC
+
+--------------------------------------------------------------------------------
+-88 pt//round: E0(P0) "Random"
+-118 pt//ound: E3(P3) "Collude but retaliate"
+BcBbBcBcBcCCCBcBcCBcCCBcBbCCCCCBcCCCCCBcCCCCCBcBcBbCCCBcCBbBcCCCCCBcCCCCCCCCBcCC
+cBcbcBcBcBCCCcBcBCcBCCcBcbCCCCCcBCCCCCcBCCCCCcBcBcbCCCcBCcbcBCCCCCcBCCCCCCCCcBCC
+
+BcCCCBbCCBcBcCCBcCBcCBcCCBbCBcCCBcCBcCCBbCCBbBcCBcCCCCCCBcBcCCCCCCBcBcCBcCBcCCCC
+cBCCCcbCCcBcBCCcBCcBCcBCCcbCcBCCcBCcBCCcbCCcbcBCcBCCCCCCcBcBCCCCCCcBcBCcBCcBCCCC
+
+CCCCBcCBcCBcCCCCCB
+CCCCcBCcBCcBCCCCCc
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 Section 3 - Game Data for Team E1
 --------------------------------------------------------------------------------
--64 pt//round: E1(P1) "Alterate forever if betrayed"
--199 pt//ound: E0(P0) "Random"
-CCCCcBCBcBcbCBCBCbCbcBCBCbCbCbCbCBcBcbCbCBCbCbcBCBcBCBCBcBCBCBCBcBCbCBCbCBCBcBCb
-CCCCBcCcBcBbCcCcCbCbBcCcCbCbCbCbCcBcBbCbCcCbCbBcCcBcCcCcBcCcCcCcBcCbCcCbCcCcBcCb
+-82 pt//round: E1(P1) "Alterate forever if betrayed"
+-194 pt//ound: E0(P0) "Random"
+CCCCcBCBcBCBCBcBcbCBCBCBCbCBCbCBcBCBCBcBcBcBcBCBCBCBCBcBCbCBCBCbcBcBcBCBCBCBCBCB
+CCCCBcCcBcCcCcBcBbCcCcCcCbCcCbCcBcCcCcBcBcBcBcCcCcCcCcBcCbCcCcCbBcBcBcCcCcCcCcCc
 
-cBCBCBcBCbCBcBCbCbCBCBcBCBCBCBcBCBcBCBCbCbCBcBCBCBCBCBCBCBCBCBcBCBcbcBCBCBCB
-BcCcCcBcCbCcBcCbCbCcCcBcCcCcCcBcCcBcCcCbCbCcBcCcCcCcCcCcCcCcCcBcCcBbBcCcCcCc
+cbCbCBCBCBCbCBcBCBcbCBcBCBCbcBCBCBCBCbCbcBCbCbcBCBCBCBcBCbCBcBcbCBCbCbcBcbcBCbCb
+BbCbCcCcCcCbCcBcCcBbCcBcCcCbBcCcCcCcCbCbBcCbCbBcCcCcCcBcCbCcBcBbCcCbCbBcBbBcCbCb
+
+CBcbCBCBcbcbCBCB
+CcBbCcCcBbBbCcCc
 
 --------------------------------------------------------------------------------
--6 pt//round: E1(P1) "Alterate forever if betrayed"
--13 pt//ound: E2(P2) "Check history"
+0 pt//round: E1(P1) "Alterate forever if betrayed"
+0 pt//ound: E2(P2) "Check history"
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
-CBbBcBcB
-CcbcBcBc
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 0 pt//round: E1(P1) "Alterate forever if betrayed"
@@ -231,35 +233,29 @@ CcbcBcBc
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 Section 3 - Game Data for Team E2
 --------------------------------------------------------------------------------
--110 pt//round: E2(P2) "Check history"
--107 pt//ound: E0(P0) "Random"
-CcBCCCcBCcBCCCcBcBcbCcBCcbbbBcBCCCCcbBCCCCCcBcBCcbbBCcBCCCCCCCCCcBCCCCCcBCCcbBcB
-CBcCCCBcCBcCCCBcBcBbCBcCBbbbcBcCCCCBbcCCCCCBcBcCBbbcCBcCCCCCCCCCBcCCCCCBcCCBbcBc
+-89 pt//round: E2(P2) "Check history"
+-85 pt//ound: E0(P0) "Random"
+CcBCCCCCCcBCCCcBcBCcBCCCCcBCcBCCCCCCcbCCCCCcbBCCCCcBCCCcbbBCCCCCCCCCCcBCCCCCCcBC
+CBcCCCCCCBcCCCBcBcCBcCCCCBcCBcCCCCCCBbCCCCCBbcCCCCBcCCCBbbcCCCCCCCCCCBcCCCCCCBcC
 
-CCCcBCcbBCCCCCCCcBCcBcBCcBCCCCCCCCCCCCCcbBcBCCcBcBCCCcBCCcBcbBCCCCCCCCCcBCcBcBcB
-CCCBcCBbcCCCCCCCBcCBcBcCBcCCCCCCCCCCCCCBbcBcCCBcBcCCCBcCCBcBbcCCCCCCCCCBcCBcBcBc
-
-CcBcBCcbBCCcBCCCCCcBcBcBCCCcBCCcbbbbBCC
-CBcBcCBbcCCBcCCCCCBcBcBcCCCBcCCBbbbbcCC
+CCCcBCCcBcBCcBCCCCCcbBcBCcBcBCcBCCCCcBCcBCcBCCCCcBCCcBcBCCCCCCCCcBCCCCcbbBCC
+CCCBcCCBcBcCBcCCCCCBbcBcCBcBcCBcCCCCBcCBcCBcCCCCBcCCBcBcCCCCCCCCBcCCCCBbbcCC
 
 --------------------------------------------------------------------------------
--13 pt//round: E2(P2) "Check history"
--6 pt//ound: E1(P1) "Alterate forever if betrayed"
+0 pt//round: E2(P2) "Check history"
+0 pt//ound: E1(P1) "Alterate forever if betrayed"
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
-CcbcBcBc
-CBbBcBcB
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 0 pt//round: E2(P2) "Check history"
@@ -267,20 +263,23 @@ CBbBcBcB
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 Section 3 - Game Data for Team E3
 --------------------------------------------------------------------------------
--137 pt//round: E3(P3) "Collude but retaliate"
--82 pt//ound: E0(P0) "Random"
-CCCcbCcBcBCcBcBcBCCCCCcBcbCcBCCCCCcBCcBCCCCCcbcBCCCcbcBcBcbCCCCcBCcBCCCCcBCCCcbc
-CCCBbCBcBcCBcBcBcCCCCCBcBbCBcCCCCCBcCBcCCCCCBbBcCCCBbBcBcBbCCCCBcCBcCCCCBcCCCBbB
+-118 pt//round: E3(P3) "Collude but retaliate"
+-88 pt//ound: E0(P0) "Random"
+cBcbcBcBcBCCCcBcBCcBCCcBcbCCCCCcBCCCCCcBCCCCCcBcBcbCCCcBCcbcBCCCCCcBCCCCCCCCcBCC
+BcBbBcBcBcCCCBcBcCBcCCBcBbCCCCCBcCCCCCBcCCCCCBcBcBbCCCBcCBbBcCCCCCBcCCCCCCCCBcCC
 
-BCCCcbCcBCCCCcbCCcbcBCcBcbCCCCC
-cCCCBbCBcCCCCBbCCBbBcCBcBbCCCCC
+cBCCCcbCCcBcBCCcBCcBCcBCCcbCcBCCcBCcBCCcbCCcbcBCcBCCCCCCcBcBCCCCCCcBcBCcBCcBCCCC
+BcCCCBbCCBcBcCCBcCBcCBcCCBbCBcCCBcCBcCCBbCCBbBcCBcCCCCCCBcBcCCCCCCBcBcCBcCBcCCCC
+
+CCCCcBCcBCcBCCCCCc
+CCCCBcCBcCBcCCCCCB
 
 --------------------------------------------------------------------------------
 0 pt//round: E3(P3) "Collude but retaliate"
@@ -288,8 +287,8 @@ cCCCBbCBcCCCCBbCCBbBcCBcBbCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 0 pt//round: E3(P3) "Collude but retaliate"
@@ -297,7 +296,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
